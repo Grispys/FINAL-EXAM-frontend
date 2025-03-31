@@ -5,6 +5,7 @@
 // via that. 
 
 let answer;
+let getData;
 document.getElementById("submit").onclick = function (){
     answer = document.getElementById("answer").value
     let validity = /^[0-9,]+$/.test(answer)
@@ -19,9 +20,20 @@ document.getElementById("submit").onclick = function (){
         window.alert(`Please enter a query that follows the format "1,2,3,4,5..."`)
     }
 
-    getBackend()
     
+    updateHTML()
 }
+
+function updateHTML(){
+    getBackend()
+    var element = document.getElementById("getRequest");
+    element.innerHTML = "";
+    element.innerHTML = getData
+}
+
+document.getElementById("getRequest")
+
+
 // sends that data as a post request to the localhost
 function postBackend(){
     fetch('http://localhost:8080/api/trees', {
@@ -40,9 +52,15 @@ function postBackend(){
 
 function getBackend(){
     fetch('http://localhost:8080/api/trees')
-        .then(response => response.json()) 
-	    .then(data => console.log('Received:', data))
+        .then(async (response) => {
+            const rawData = await response.json();
+            const cleanData = JSON.stringify(rawData)
+            getData = cleanData;
+            console.log("RECEIVED:",cleanData)
+        })
+       
 	    .catch(error => console.error('Error:', error));
+        
 }
 
 console.log("Debug: Javascript's hooked up!")
