@@ -9,21 +9,40 @@ document.getElementById("submit").onclick = function (){
     answer = document.getElementById("answer").value
     let validity = /^[0-9,]+$/.test(answer)
     if(validity){
-        
-        console.log(answer)
+        const numbers = answer.split(',').map(Number);
+        numbers.sort(function(a,b) {
+            return a - b;
+        });
+        const gTLNumbers = numbers.toReversed(); 
+        console.log(gTLNumbers)
     }else{
         window.alert(`Please enter a query that follows the format "1,2,3,4,5..."`)
     }
+
+    getBackend()
     
 }
-
-function sendBackend(){
-    fetch('http://localhost8080/api/trees', {
+// sends that data as a post request to the localhost
+function postBackend(){
+    fetch('http://localhost:8080/api/trees', {
         method: 'POST',
         headers: {
-            'Content-type:'
-        }
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+
+        })
     })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch(error => console.error('Error:', error));
+}
+
+function getBackend(){
+    fetch('http://localhost:8080/api/trees')
+        .then(response => response.json()) 
+	    .then(data => console.log('Received:', data))
+	    .catch(error => console.error('Error:', error));
 }
 
 console.log("Debug: Javascript's hooked up!")
