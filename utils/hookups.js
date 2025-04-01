@@ -24,6 +24,7 @@ document.getElementById("submit").onclick = function (){
     updateHTML()
 }
 
+// updates the html element "getrequest", which is a p tag, to the getRequests data
 function updateHTML(){
     getBackend()
     var element = document.getElementById("getRequest");
@@ -50,6 +51,8 @@ function postBackend(){
     .catch(error => console.error('Error:', error));
 }
 
+// sends a get request to the localhost, changes it to string, and sets global variable
+// getData to that stringified jumbo
 function getBackend(){
     fetch('http://localhost:8080/api/trees')
         .then(async (response) => {
