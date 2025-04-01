@@ -4,6 +4,7 @@
   
   body {
     font-family: Arial, Helvetica, sans-serif;
+    background-color: #0694b87e;
   }
   
   /* Style the header */
@@ -25,7 +26,8 @@
     -webkit-flex: 1;
     -ms-flex: 1;
     text-align: center;
-    background-color:#aaa;
+    color: white;
+    background-color:#425e80ad;
     flex: 1;
     padding: 10px;
     height: 300px; /* Should be removed. Only for demonstration */
@@ -34,6 +36,8 @@
   .column2 {
     -webkit-flex: 1;
     -ms-flex: 1;
+    text-align: center;
+    background-color:#a57575;
     flex: 1;
     padding: 10px;
     height: 300px; /* Should be removed. Only for demonstration */

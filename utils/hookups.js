@@ -6,6 +6,9 @@
 
 let answer;
 let getData;
+
+let networkConnection;
+
 document.getElementById("submit").onclick = function (){
     answer = document.getElementById("answer").value
     let validity = /^[0-9,]+$/.test(answer)
@@ -25,15 +28,17 @@ document.getElementById("submit").onclick = function (){
 }
 
 // updates the html element "getrequest", which is a p tag, to the getRequests data
-function updateHTML(){
-    getBackend()
+async function updateHTML(){
     var element = document.getElementById("getRequest");
-    element.innerHTML = "";
-    element.innerHTML = getData
+    element.innerHTML = "Loading..."
+    await getBackend()
+    if(networkConnection){
+        element.innerHTML = getData
+    }else{
+        element.innerHTML = "Ooops! Looks like you don't have the backend set up. <br> I'm looking at http://localhost:8080/api/trees. Is anything there?"
+    }
+   
 }
-
-document.getElementById("getRequest")
-
 
 // sends that data as a post request to the localhost
 function postBackend(){
@@ -53,17 +58,18 @@ function postBackend(){
 
 // sends a get request to the localhost, changes it to string, and sets global variable
 // getData to that stringified jumbo
-function getBackend(){
-    fetch('http://localhost:8080/api/trees')
-        .then(async (response) => {
-            const rawData = await response.json();
-            const cleanData = JSON.stringify(rawData)
-            getData = cleanData;
-            console.log("RECEIVED:",cleanData)
-        })
-       
-	    .catch(error => console.error('Error:', error));
-        
+async function getBackend(){
+	try {
+		const response = await fetch('http://localhost:8080/api/trees');
+		networkConnection = true;
+		const rawData = await response.json();
+		const cleanData = JSON.stringify(rawData);
+		getData = cleanData;
+		console.log("RECEIVED:", cleanData);
+	} catch (error) {
+		console.error('Error:', error);
+		networkConnection = false;
+	}
 }
 
 console.log("Debug: Javascript's hooked up!")
