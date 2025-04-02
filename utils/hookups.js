@@ -6,6 +6,7 @@
 
 let answer;
 let getData;
+let gTLNumbers;
 
 let networkConnection;
 
@@ -17,14 +18,16 @@ document.getElementById("submit").onclick = function (){
         numbers.sort(function(a,b) {
             return a - b;
         });
-        const gTLNumbers = numbers.toReversed(); 
+        gTLNumbers = numbers.toReversed(); 
         console.log(gTLNumbers)
+        postBackend()
+        updateHTML()
     }else{
         window.alert(`Please enter a query that follows the format "1,2,3,4,5..."`)
     }
 
     
-    updateHTML()
+    
 }
 
 // updates the html element "getrequest", which is a p tag, to the getRequests data
@@ -42,14 +45,13 @@ async function updateHTML(){
 
 // sends that data as a post request to the localhost
 function postBackend(){
-    fetch('http://localhost:8080/api/trees', {
+    fetch('http://localhost:8080/api/trees/process-numbers', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
         },
-        body: JSON.stringify({
+        body: JSON.stringify(gTLNumbers)
 
-        })
     })
     .then(response => response.json())
     .then(data => console.log('Success:', data))

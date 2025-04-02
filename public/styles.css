@@ -1,5 +1,8 @@
+/* yoinked this css template from w3schools */
+
 * {
     box-sizing: border-box;
+ 
   }
   
   body {
@@ -13,6 +16,8 @@
     padding: 30px;
     text-align: center;
     font-size: 35px;
+    margin-bottom: 200px;
+    border-radius: 20cm;
   }
   
   /* Container for flexboxes */
@@ -20,8 +25,7 @@
     display: -webkit-flex;
     display: flex;
   }
-  
-  /* Create three equal columns that sits next to each other */
+
   .column1 {
     -webkit-flex: 1;
     -ms-flex: 1;
@@ -30,7 +34,7 @@
     background-color:#425e80ad;
     flex: 1;
     padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
+    border-radius: 20px;
   }
 
   .column2 {
@@ -40,7 +44,7 @@
     background-color:#a57575;
     flex: 1;
     padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
+    border-radius: 20px;
   }
   
   /* Style the footer */
