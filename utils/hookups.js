@@ -35,7 +35,11 @@ async function updateHTML(){
     
     await getBackend()
     if(networkConnection){
-        element.innerHTML = getData
+        console.log(getData)
+        var parsedData = JSON.parse(getData);
+        var indentedData = JSON.stringify(parsedData, null, 2);
+        element.innerHTML = `<pre>${indentedData}</pre>`;
+        
     }else{
         element.innerHTML = "Ooops! Looks like you don't have the backend set up. <br> I'm looking at http://localhost:8080/api/trees. Is anything there?"
     }
@@ -52,12 +56,12 @@ async function postBackend(){
             },
             body: JSON.stringify(numbers)
         })
-        const data = await
-    }
+        const data = await request.json()
+        console.log("Success!", data)
 
-    .then(response => response.json())
-    .then(data => console.log('Success:', data))
-    .catch(error => console.error('Error:', error));
+    }catch{
+        console.error('Error:', error)
+    }
 }
 
 // sends a get request to the localhost, changes it to string, and sets global variable
@@ -67,9 +71,8 @@ async function getBackend(){
 		const response = await fetch('http://localhost:8080/api/trees/most-recent');
 		networkConnection = true;
 		const rawData = await response.json();
-		const cleanData = JSON.stringify(rawData);
-		getData = cleanData;
-		console.log("RECEIVED:", cleanData);
+		getData = rawData;
+		console.log("RECEIVED:", getData);
 	} catch (error) {
 		console.error('Error:', error);
 		networkConnection = false;
