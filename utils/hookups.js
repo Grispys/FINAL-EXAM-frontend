@@ -1,27 +1,24 @@
 // let's do this boys
 
-//this is not a function as it will always be checking for submissions via html.
-// validity checks if the answer fits the regex of 0-9 + commas, and then sends a post request
-// via that. 
+// 
 
 let answer;
 let getData;
-let gTLNumbers;
+let numbers;
 
 let networkConnection;
 
-document.getElementById("submit").onclick = function (){
+document.getElementById("submit").onclick = async function (){
     answer = document.getElementById("answer").value
     let validity = /^[0-9,]+$/.test(answer)
     if(validity){
-        const numbers = answer.split(',').map(Number);
-        numbers.sort(function(a,b) {
-            return a - b;
-        });
-        gTLNumbers = numbers.toReversed(); 
-        console.log(gTLNumbers)
-        postBackend()
-        updateHTML()
+        numbers = answer.split(',').map(Number);
+        // numbers.sort(function(a,b) {
+            // return a - b;
+        // });
+        // gTLNumbers = numbers.toReversed(); 
+        console.log(numbers)
+        await updateHTML()
     }else{
         window.alert(`Please enter a query that follows the format "1,2,3,4,5..."`)
     }
@@ -34,6 +31,8 @@ document.getElementById("submit").onclick = function (){
 async function updateHTML(){
     var element = document.getElementById("getRequest");
     element.innerHTML = "Loading..."
+    await postBackend()
+    
     await getBackend()
     if(networkConnection){
         element.innerHTML = getData
@@ -44,15 +43,18 @@ async function updateHTML(){
 }
 
 // sends that data as a post request to the localhost
-function postBackend(){
-    fetch('http://localhost:8080/api/trees/process-numbers', {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json',
-        },
-        body: JSON.stringify(gTLNumbers)
+async function postBackend(){
+    try {
+        const request = await fetch('http://localhost:8080/api/trees/process-numbers', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(numbers)
+        })
+        const data = await
+    }
 
-    })
     .then(response => response.json())
     .then(data => console.log('Success:', data))
     .catch(error => console.error('Error:', error));
@@ -61,8 +63,8 @@ function postBackend(){
 // sends a get request to the localhost, changes it to string, and sets global variable
 // getData to that stringified jumbo
 async function getBackend(){
-	try {
-		const response = await fetch('http://localhost:8080/api/trees');
+    try {
+		const response = await fetch('http://localhost:8080/api/trees/most-recent');
 		networkConnection = true;
 		const rawData = await response.json();
 		const cleanData = JSON.stringify(rawData);
