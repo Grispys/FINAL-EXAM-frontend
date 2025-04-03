@@ -50,8 +50,8 @@ async function updateHTML(query){
         await getBackend("all")
         if(networkConnection){
             console.log(getData)
-            var parsedData = JSON.parse(getData);
-            var indentedData = JSON.stringify(parsedData, null, 2);
+            // var parsedData = JSON.parse(getData);
+            var indentedData = JSON.stringify(getData, null, 4);
             element.innerHTML = `<pre>${indentedData}</pre>`;
             
         }else{
