@@ -1,6 +1,6 @@
 // let's do this boys
 
-// 
+// ASYNC UNITE!!!!!
 
 let answer;
 let getData;
@@ -27,35 +27,30 @@ document.getElementById("previous").onclick = async function (){
 
 
 
-// updates the html element "getrequest", which is a p tag, to the getRequests data
+// updates the html element "getrequest", which is now a loading icon in between data moving, to the getRequests data
+// depending on updateHTML's argument, changes whether or not a postBackend() is called
 async function updateHTML(query){
     var element = document.getElementById("getRequest");
-    element.innerHTML = "Loading..."
+    element.innerHTML = `<div class="loader"></div>`
     
     if(query =="recent"){
         await postBackend()
     
         await getBackend("recent")
         if(networkConnection){
-            console.log(getData)
-            var parsedData = JSON.parse(getData);
-            var indentedData = JSON.stringify(parsedData, null, 2);
-            element.innerHTML = `<pre>${indentedData}</pre>`;
-            
+            element.innerHTML = `<pre>${getData}</pre>`;
+
         }else{
-            element.innerHTML = "Ooops! Looks like you don't have the backend set up. <br> I'm looking at http://localhost:8080/api/trees. Is anything there?"
+            element.innerHTML = "Ooops! Looks like you don't have the backend set up. <br> I'm looking at http://localhost:8080/api/trees/most-recent. Is anything there?"
         }
     }else if(query =="all"){
         
         await getBackend("all")
-        if(networkConnection){
-            console.log(getData)
-            // var parsedData = JSON.parse(getData);
-            var indentedData = JSON.stringify(getData, null, 4);
-            element.innerHTML = `<pre>${indentedData}</pre>`;
+        if(networkConnection){ 
+            element.innerHTML = `<pre>${getData}</pre>`;
             
         }else{
-            element.innerHTML = "Ooops! Looks like you don't have the backend set up. <br> I'm looking at http://localhost:8080/api/trees. Is anything there?"
+            element.innerHTML = "Ooops! Looks like you don't have the backend set up. <br> I'm looking at http://localhost:8080/api/trees/previous-trees. Is anything there?"
         }
     }
 
@@ -76,13 +71,15 @@ async function postBackend(){
         const data = await request.json()
         console.log("Success!", data)
 
-    }catch{
+    }catch(error){
         console.error('Error:', error)
     }
 }
 
 // sends a get request to the localhost, changes it to string, and sets global variable
 // getData to that stringified jumbo
+
+// depending on getBackends argument, changes whether to fetch specific or all data
 async function getBackend(query){
     let fetchURL;
     if(query == "recent"){
@@ -93,10 +90,10 @@ async function getBackend(query){
 
     try {
 		const response = await fetch(fetchURL);
-		networkConnection = true;
 		const rawData = await response.json();
-		getData = rawData;
+		getData = JSON.stringify(rawData, null, 4);
 		console.log("RECEIVED:", getData);
+        networkConnection = true;
 	} catch (error) {
 		console.error('Error:', error);
 		networkConnection = false;
